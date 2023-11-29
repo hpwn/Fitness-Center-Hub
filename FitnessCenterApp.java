@@ -87,248 +87,89 @@ public class FitnessCenterApp {
 
     private static void insertMemberRecord() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter member ID: ");
-        int memberId = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-        System.out.println("Enter first name: ");
-        String fname = scanner.nextLine();
-        System.out.println("Enter last name: ");
-        String lname = scanner.nextLine();
-        System.out.println("Enter phone number: ");
-        String phonenum = scanner.nextLine();
-        System.out.println("Enter membership level ID: ");
-        int memlevelId = scanner.nextInt();
-        System.out.println("Enter total spent: ");
-        double totalSpent = scanner.nextDouble();
+        System.out.println(
+                "Enter member ID, first name, last name, phone number, membership level ID, total spent (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn
-                        .prepareStatement("INSERT INTO colegperry.member VALUES (?, ?, ?, ?, ?, ?)")) {
-            stmt.setInt(1, memberId);
-            stmt.setString(2, fname);
-            stmt.setString(3, lname);
-            stmt.setString(4, phonenum);
-            stmt.setInt(5, memlevelId);
-            stmt.setDouble(6, totalSpent);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.member VALUES (?, ?, ?, ?, ?, ?)", params);
     }
 
     private static void insertMemLevelRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Level ID, Level Name, Discount, Minimum Spent (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Level ID: ");
-        int levelId = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.println("Enter Level Name: ");
-        String levelName = scanner.nextLine();
-
-        System.out.println("Enter Discount: ");
-        int discount = scanner.nextInt();
-
-        System.out.println("Enter Minimum Spent: ");
-        double minSpent = scanner.nextDouble();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO colegperry.memlevel VALUES (?, ?, ?, ?)")) {
-
-            stmt.setInt(1, levelId);
-            stmt.setString(2, levelName);
-            stmt.setInt(3, discount);
-            stmt.setDouble(4, minSpent);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.memlevel VALUES (?, ?, ?, ?)", params);
     }
 
     private static void insertCourseRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println(
+                "Enter Course ID, Course Name, Start Time, Start Date (yyyy-mm-dd), End Date (yyyy-mm-dd) (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Course ID: ");
-        int courseId = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.println("Enter Course Name: ");
-        String courseName = scanner.nextLine();
-
-        System.out.println("Enter Start Time (as an integer): ");
-        int time = scanner.nextInt();
-
-        System.out.println("Enter Start Date (format yyyy-mm-dd): ");
-        String startDate = scanner.next();
-
-        System.out.println("Enter End Date (format yyyy-mm-dd): ");
-        String endDate = scanner.next();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO colegperry.course VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'))")) {
-
-            stmt.setInt(1, courseId);
-            stmt.setString(2, courseName);
-            stmt.setInt(3, time);
-            stmt.setString(4, startDate);
-            stmt.setString(5, endDate);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert(
+                "INSERT INTO colegperry.course VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), TO_DATE(?, 'YYYY-MM-DD'))",
+                params);
     }
 
     private static void insertTrainerRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Trainer ID, Trainer Name, Phone Number (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Trainer ID: ");
-        int trainerId = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
-        System.out.println("Enter Trainer Name: ");
-        String trainerName = scanner.nextLine();
-
-        System.out.println("Enter Phone Number: ");
-        int phoneNumber = scanner.nextInt();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO colegperry.trainer VALUES (?, ?, ?)")) {
-
-            stmt.setInt(1, trainerId);
-            stmt.setString(2, trainerName);
-            stmt.setInt(3, phoneNumber);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.trainer VALUES (?, ?, ?)", params);
     }
 
     private static void insertTrainClassRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Trainer ID, Class ID (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Trainer ID: ");
-        int trainerId = scanner.nextInt();
-
-        System.out.println("Enter Class ID: ");
-        int classId = scanner.nextInt();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO colegperry.trainClass VALUES (?, ?)")) {
-
-            stmt.setInt(1, trainerId);
-            stmt.setInt(2, classId);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.trainClass VALUES (?, ?)", params);
     }
 
     private static void insertItemRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println(
+                "Enter Item ID, Member ID, Check-in Time, Check-out Time, Quantity, Lost Status (0 or 1) (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Item ID: ");
-        int itemId = scanner.nextInt();
-
-        System.out.println("Enter Member ID: ");
-        int memberId = scanner.nextInt();
-
-        System.out.println("Enter Check-in Time (as an integer): ");
-        int checkin = scanner.nextInt();
-
-        System.out.println("Enter Check-out Time (as an integer): ");
-        int checkout = scanner.nextInt();
-
-        System.out.println("Enter Quantity: ");
-        int qty = scanner.nextInt();
-
-        System.out.println("Enter Lost Status (0 for not lost, 1 for lost): ");
-        int lost = scanner.nextInt();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn
-                        .prepareStatement("INSERT INTO colegperry.item VALUES (?, ?, ?, ?, ?, ?)")) {
-
-            stmt.setInt(1, itemId);
-            stmt.setInt(2, memberId);
-            stmt.setInt(3, checkin);
-            stmt.setInt(4, checkout);
-            stmt.setInt(5, qty);
-            stmt.setInt(6, lost);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.item VALUES (?, ?, ?, ?, ?, ?)", params);
     }
 
     private static void insertTransactionRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println(
+                "Enter Transaction ID, Amount, Transaction Date (yyyy-mm-dd), Transaction Type (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Transaction ID: ");
-        int transId = scanner.nextInt();
-
-        System.out.println("Enter Amount: ");
-        int amount = scanner.nextInt();
-
-        System.out.println("Enter Transaction Date (format yyyy-mm-dd): ");
-        String transDate = scanner.next();
-
-        System.out.println("Enter Transaction Type: ");
-        scanner.nextLine(); // consume newline
-        String transType = scanner.nextLine();
-
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(
-                        "INSERT INTO colegperry.transaction VALUES (?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?)")) {
-
-            stmt.setInt(1, transId);
-            stmt.setInt(2, amount);
-            stmt.setString(3, transDate);
-            stmt.setString(4, transType);
-
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println(rowsAffected + " row(s) inserted.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        executeInsert("INSERT INTO colegperry.transaction VALUES (?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?)", params);
     }
 
     private static void insertCoursePackageRecord() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Package Number, Package Name, First Class ID, Second Class ID (comma-separated): ");
+        String input = scanner.nextLine();
+        String[] params = input.split(",");
 
-        System.out.println("Enter Package Number: ");
-        int packageNum = scanner.nextInt();
+        executeInsert("INSERT INTO colegperry.coursePackage VALUES (?, ?, ?, ?)", params);
+    }
 
-        System.out.println("Enter Package Name: ");
-        scanner.nextLine(); // consume newline
-        String packageName = scanner.nextLine();
-
-        System.out.println("Enter First Class ID: ");
-        int firstClassId = scanner.nextInt();
-
-        System.out.println("Enter Second Class ID: ");
-        int secondClassId = scanner.nextInt();
-
+    private static void executeInsert(String sql, String[] params) {
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn
-                        .prepareStatement("INSERT INTO colegperry.coursePackage VALUES (?, ?, ?, ?)")) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, packageNum);
-            stmt.setString(2, packageName);
-            stmt.setInt(3, firstClassId);
-            stmt.setInt(4, secondClassId);
+            for (int i = 0; i < params.length; i++) {
+                stmt.setString(i + 1, params[i]);
+            }
 
             int rowsAffected = stmt.executeUpdate();
             System.out.println(rowsAffected + " row(s) inserted.");
