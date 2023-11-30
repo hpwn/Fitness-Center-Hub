@@ -25,7 +25,7 @@ CREATE TABLE course (
 CREATE TABLE trainer (
 	trainerID INT PRIMARY KEY, --trainer ID
 	trainername VARCHAR2(100), -- name of trainer
-	phonenum INT                -- phone number cause why not
+	phonenum VARCHAR2(100)     -- phone number cause why not
 );
 
 CREATE TABLE trainClass (
