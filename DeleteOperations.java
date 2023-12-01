@@ -46,9 +46,6 @@ public class DeleteOperations {
                 return; // Prevent deletion
             }
 
-            // Check for Active Course Participation and Delete
-            // deleteCourseParticipations(conn, memberID);
-
             // Finally, Delete Member
             String deleteQuery = "DELETE FROM colegperry.member WHERE memberID = " + memberID;
             try (PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
@@ -103,18 +100,6 @@ public class DeleteOperations {
             }
         }
         return false;
-    }
-
-    private static void deleteCourseParticipations(Connection conn, String memberID) throws SQLException {
-        // Assuming a hypothetical table 'course_enrollment'... what should we do here
-        // we need a way to track who's enrolled in what right? because when I start to
-        // create the delete course function,
-        // I need to know who's enrolled in what course so I can delete them, etc, etc
-        String delete = "DELETE FROM course_enrollment WHERE memberID = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(delete)) {
-            stmt.setString(1, memberID);
-            stmt.executeUpdate();
-        }
     }
 
     private static void deleteCourseRecord() {
