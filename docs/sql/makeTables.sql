@@ -10,7 +10,6 @@ CREATE TABLE member (
 	-- totalspent-totalpaid is the amound they owe, none if 0
 );
 
-
 CREATE TABLE memlevel (
 	levelID INT PRIMARY KEY, -- The ID of the membership level
 	levelname VARCHAR2(100), -- The name of the membership level
@@ -24,8 +23,8 @@ CREATE TABLE course (
 	time INT,                -- the start time
 	sdate DATE,              -- the start date
 	edate DATE,        	 -- the end date
-	numenrolled INT,
-	maxamount INT
+	numenrolled INT,        	 -- number of people enrolled
+	maxenrollment INT 	  -- max number of people allowed to enroll
 );
 
 CREATE TABLE trainer (
