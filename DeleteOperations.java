@@ -92,21 +92,68 @@ public class DeleteOperations {
         }
     }
 
-    private static void deleteCourseRecord() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the ID number of the Course you would like to remove: ");
-        String IDToRemove = scanner.nextLine();
+    public static void deleteCourseRecord() {
+        try (Connection conn = DBConnection.getConnection()) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter Course ID to delete:");
+            int courseId = scanner.nextInt();
 
-        String deleteQuery = "DELETE FROM colegperry.course WHERE courseID = " + IDToRemove;
+            if (courseHasActiveEnrollments(conn, courseId)) {
+                printEnrolledMembers(conn, courseId);
+                // Wait for confirmation to proceed after notifying members
+                System.out.println("Press 'Y' to confirm deletion after notifying members:");
+                String confirmation = scanner.next();
+                if (!confirmation.equalsIgnoreCase("Y")) {
+                    return; // Exit if not confirmed
+                }
+            }
 
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+            deleteCourse(conn, courseId);
+            System.out.println("Course and corresponding enrollments deleted successfully.");
 
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println("Course Removed, " + rowsAffected + " row(s) affected.");
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static boolean courseHasActiveEnrollments(Connection conn, int courseId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM coursePackage WHERE firstclassID = ? OR secondclassID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, courseId);
+            stmt.setInt(2, courseId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        }
+    }
+
+    private static void printEnrolledMembers(Connection conn, int courseId) throws SQLException {
+        String sql = "SELECT m.fname, m.lname, m.phonenum FROM member m JOIN coursePackage cp ON m.curpackageID = cp.packagenum WHERE cp.firstclassID = ? OR cp.secondclassID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, courseId);
+            stmt.setInt(2, courseId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                String name = rs.getString("fname") + " " + rs.getString("lname");
+                String phone = rs.getString("phonenum");
+                System.out.println("Member: " + name + ", Phone: " + phone);
+            }
+        }
+    }
+
+    private static void deleteCourse(Connection conn, int courseId) throws SQLException {
+        // Update coursePackage table to remove references to the deleted course
+        String sqlUpdatePackage = "UPDATE coursePackage SET firstclassID = NULL WHERE firstclassID = ?; UPDATE coursePackage SET secondclassID = NULL WHERE secondclassID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sqlUpdatePackage)) {
+            stmt.setInt(1, courseId);
+            stmt.setInt(2, courseId);
+            stmt.executeUpdate();
+        }
+
+        // Delete the course
+        String sqlDeleteCourse = "DELETE FROM course WHERE courseID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteCourse)) {
+            stmt.setInt(1, courseId);
+            stmt.executeUpdate();
         }
     }
 
