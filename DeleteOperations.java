@@ -28,78 +28,68 @@ public class DeleteOperations {
         }
     }
 
-    private static void deleteMemberRecord() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the ID number of the Member you would like to remove: ");
-        String memberID = scanner.nextLine();
-
+    public static void deleteMemberRecord() {
         try (Connection conn = DBConnection.getConnection()) {
-            // Check for Unreturned Equipment
-            if (hasUnreturnedEquipment(conn, memberID)) {
-                markEquipmentAsLost(conn, memberID);
-                updateAvailableEquipmentQuantity(conn, memberID);
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Enter Member ID to delete:");
+            int memberId = scanner.nextInt();
+
+            // Check for unreturned equipment
+            checkAndMarkUnreturnedEquipment(conn, memberId);
+
+            // Check for unpaid balances
+            if (hasUnpaidBalances(conn, memberId)) {
+                return; // Exit if there are unpaid balances
             }
 
-            // Check for Unpaid Balances
-            if (hasUnpaidBalances(conn, memberID)) {
-                System.out.println("Member has unpaid balances. Cannot delete account.");
-                return; // Prevent deletion
-            }
+            // Check and handle active course participation
+            handleActiveCourseParticipation(conn, memberId);
 
-            // Finally, Delete Member
-            String deleteQuery = "DELETE FROM colegperry.member WHERE memberID = " + memberID;
-            try (PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
-                stmt.executeUpdate();
-                System.out.println("Member Removed");
-            }
+            // Delete the member record
+            deleteMember(conn, memberId);
 
-            conn.close();
+            System.out.println("Member record deleted successfully.");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private static boolean hasUnreturnedEquipment(Connection conn, String memberID) throws SQLException {
-        String query = "SELECT COUNT(*) FROM item WHERE memberID = ? AND checkout IS NOT NULL AND lost = 0";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, memberID);
+    private static void checkAndMarkUnreturnedEquipment(Connection conn, int memberId) throws SQLException {
+        String sql = "UPDATE item SET lost = 1 WHERE memberID = ? AND checkout IS NOT NULL AND checkin IS NULL";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, memberId);
+            stmt.executeUpdate();
+        }
+    }
+
+    private static boolean hasUnpaidBalances(Connection conn, int memberId) throws SQLException {
+        String sql = "SELECT SUM(totalPaid - totalspent) AS balance FROM member WHERE memberID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, memberId);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            if (rs.next() && rs.getDouble("balance") < 0) {
+                System.out.println("Member has unpaid balances. Cannot delete.");
+                return true;
             }
         }
         return false;
     }
 
-    private static void markEquipmentAsLost(Connection conn, String memberID) throws SQLException {
-        String update = "UPDATE item SET lost = 1 WHERE memberID = ? AND checkout IS NOT NULL";
-        try (PreparedStatement stmt = conn.prepareStatement(update)) {
-            stmt.setString(1, memberID);
+    private static void handleActiveCourseParticipation(Connection conn, int memberId) throws SQLException {
+        String sql = "DELETE FROM course WHERE memberID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, memberId);
             stmt.executeUpdate();
         }
     }
 
-    private static void updateAvailableEquipmentQuantity(Connection conn, String memberID) throws SQLException {
-        // Assuming 'qty' in 'item' table represents the total available quantity for
-        // each item type
-        String update = "UPDATE item SET qty = qty - 1 WHERE memberID = ? AND checkout IS NOT NULL AND lost = 1";
-        try (PreparedStatement stmt = conn.prepareStatement(update)) {
-            stmt.setString(1, memberID);
+    private static void deleteMember(Connection conn, int memberId) throws SQLException {
+        String sql = "DELETE FROM member WHERE memberID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, memberId);
             stmt.executeUpdate();
         }
-    }
-
-    private static boolean hasUnpaidBalances(Connection conn, String memberID) throws SQLException {
-        // Assuming there is a way to determine unpaid transactions.
-        String query = "SELECT COUNT(*) FROM transaction,member WHERE memberID = ? AND totalspent-totalpaid > 0";
-        try (PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, memberID);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        }
-        return false;
     }
 
     private static void deleteCourseRecord() {
