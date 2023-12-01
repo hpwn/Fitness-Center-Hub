@@ -12,6 +12,7 @@ transaction table which violates the primary key constraint
 -figure out what to do with the NULL course record in a package that results when a course is deleted using the functions
 
 -COLE/AUDREY: start creating queries, create design.pdf (Hayden will provide (b)iv. once complete)
+-add TAs to github for demo
 
 4 later:
 -create file/class/function comments/documentation
