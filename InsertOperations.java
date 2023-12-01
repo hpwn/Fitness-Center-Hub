@@ -12,7 +12,7 @@ public class InsertOperations {
     private static Scanner scanner = new Scanner(System.in);
     static int transactionID = 150;
 
-    static void insertRecord() {
+    public static void insertRecord() {
         // Checks what kind of insert the user would like to make
         Scanner scanner = new Scanner(System.in);
         System.out.println("Select a table to insert record:");
@@ -56,7 +56,7 @@ public class InsertOperations {
         }
     }
 
-    private static void insertMemberRecord() {
+    public static void insertMemberRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.print(
                 "Enter member ID, first name, last name, phone number (comma-separated and no spaces): ");
@@ -142,7 +142,7 @@ public class InsertOperations {
 
     }
 
-    private static void insertMemLevelRecord() {
+    public static void insertMemLevelRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Level ID, Level Name, Discount, Minimum Spent (comma-separated and no spaces): ");
         String input = scanner.nextLine();
@@ -154,7 +154,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.memlevel VALUES " + statementString);
     }
 
-    private static void insertCourseRecord() {
+    public static void insertCourseRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(
                 "Enter Course ID, Course Name, Start Time, Start Date (yyyy-mm-dd), End Date (yyyy-mm-dd) (comma-separated): ");
@@ -167,7 +167,7 @@ public class InsertOperations {
                 "INSERT INTO colegperry.course VALUES " + statementString);
     }
 
-    private static void insertTrainerRecord() {
+    public static void insertTrainerRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Trainer ID, Trainer Name, Phone Number (comma-separated): ");
         String input = scanner.nextLine();
@@ -177,7 +177,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.trainer VALUES " + statementString);
     }
 
-    private static void insertTrainClassRecord() {
+    public static void insertTrainClassRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Trainer ID, Class ID (comma-separated): ");
         String input = scanner.nextLine();
@@ -187,7 +187,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.trainClass VALUES " + statementString);
     }
 
-    private static void insertItemRecord() {
+    public static void insertItemRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(
                 "Enter Item ID, Member ID, Check-in Time, Check-out Time, Quantity, Lost Status (0 or 1) (comma-separated): ");
@@ -199,7 +199,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.item VALUES " + statementString);
     }
 
-    private static void insertTransactionRecord() {
+    public static void insertTransactionRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println(
                 "Enter Transaction ID, Amount, Transaction Date (yyyy-mm-dd), Transaction Type (comma-separated): ");
@@ -211,7 +211,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.transaction VALUES " + statementString);
     }
 
-    private static void insertTransactionRecord(String sql) {
+    public static void insertTransactionRecord(String sql) {
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -223,7 +223,7 @@ public class InsertOperations {
         }
     }
 
-    private static void insertCoursePackageRecord() {
+    public static void insertCoursePackageRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Package Number, Package Name, First Class ID, Second Class ID (comma-separated): ");
         String input = scanner.nextLine();
@@ -233,7 +233,7 @@ public class InsertOperations {
         executeInsert("INSERT INTO colegperry.coursePackage VALUES " + statementString);
     }
 
-    private static void executeInsert(String sql) {
+    public  static void executeInsert(String sql) {
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 
