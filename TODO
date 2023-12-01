@@ -6,8 +6,8 @@ todo:
 creating a new member entry. After this initial step, the system presents the contents and price of each
 available course package for selection. Once a member selects a package, related records are updated to
 reflect this choice.
-    -So when we insert a member, we have to ask them for the package they want, and update other tables accordingly
-      * This will require not directly inserting data into the member table, but rather gathering multiple pieces of data
+    -DONE: So when we insert a member, we have to ask them for the package they want, and update other tables accordingly
+      * DONE: This will require not directly inserting data into the member table, but rather gathering multiple pieces of data
         such as personal information and then package information, and THEN inserting into the member table and associated tables.
 
 -COLE/AUDREY: create design.pdf (Hayden will provide (b)iv. once complete)
