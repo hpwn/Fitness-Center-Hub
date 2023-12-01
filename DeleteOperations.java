@@ -157,21 +157,58 @@ public class DeleteOperations {
         }
     }
 
-    private static void deleteCoursePackageRecord() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the ID number of the Course Package you would like to remove: ");
-        String IDToRemove = scanner.nextLine();
+    public static void deleteCoursePackageRecord() {
+        try (Connection conn = DBConnection.getConnection()) {
+            Scanner scanner = new Scanner(System.in);
 
-        String deleteQuery = "DELETE FROM colegperry.coursePackage WHERE packageID = " + IDToRemove;
+            // Display all course packages
+            displayCoursePackages(conn);
 
-        try (Connection conn = DBConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(deleteQuery)) {
+            // Ask the admin to select a package for deletion
+            System.out.println("Enter the ID of the Course Package to delete:");
+            int packageId = scanner.nextInt();
 
-            int rowsAffected = stmt.executeUpdate();
-            System.out.println("Course Package Removed, " + rowsAffected + " row(s) affected.");
-            conn.close();
+            // Check if deleting the package will affect enrolled members
+            if (isPackageInUse(conn, packageId)) {
+                System.out.println("Cannot delete package as it is currently in use by members.");
+                return; // Exit if the package is in use
+            }
+
+            // Proceed with deletion
+            deleteCoursePackage(conn, packageId);
+            System.out.println("Course package deleted successfully.");
+
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void displayCoursePackages(Connection conn) throws SQLException {
+        String sql = "SELECT * FROM coursePackage";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                int packagenum = rs.getInt("packagenum");
+                String packagename = rs.getString("packagename");
+                System.out.println("Package ID: " + packagenum + ", Package Name: " + packagename);
+            }
+        }
+    }
+
+    private static boolean isPackageInUse(Connection conn, int packageId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM member WHERE curpackageID = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, packageId);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        }
+    }
+
+    private static void deleteCoursePackage(Connection conn, int packageId) throws SQLException {
+        String sql = "DELETE FROM coursePackage WHERE packagenum = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, packageId);
+            stmt.executeUpdate();
         }
     }
 }
