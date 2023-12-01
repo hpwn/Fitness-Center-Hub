@@ -24,10 +24,10 @@ public class FitnessCenterApp {
                         DeleteOperations.deleteRecord();
                         break;
                     case 3:
-                        updateRecord();
+                        // updateRecord();
                         break;
                     case 4:
-                        executeQuery();
+                        // executeQuery();
                         break;
                     case 5:
                         return;
@@ -40,11 +40,4 @@ public class FitnessCenterApp {
         }
     }
 
-    private static void updateRecord() {
-        // Implementation of record update
-    }
-
-    private static void executeQuery() {
-        // Implementation of executing a query
-    }
 }
