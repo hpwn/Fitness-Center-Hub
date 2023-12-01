@@ -1,4 +1,12 @@
+/*
+ * Authors: Hayden Price, Cole Perry, Audrey Gagum
+ * File: FitnessCenterApp.java
+ */
+
+import java.math.BigDecimal;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class FitnessCenterApp {
@@ -6,6 +14,7 @@ public class FitnessCenterApp {
 
     public static void main(String[] args) {
         try {
+        	//Gathering what the user would like to do
             while (true) {
                 System.out.println("Choose an operation:");
                 System.out.println("1: Insert Record");
@@ -40,6 +49,7 @@ public class FitnessCenterApp {
     }
 
     private static void insertRecord() {
+    	//Checks what kind of insert the user would like to make
         Scanner scanner = new Scanner(System.in);
         System.out.println("Select a table to insert record:");
         System.out.println("1: Member");
@@ -82,18 +92,24 @@ public class FitnessCenterApp {
         }
     }
 
+    /*
+     * The below functions all do the same thing, create a query
+     * string which is then executed in SQL with data gathered and
+     * inserted into the proper tables.
+     */
+    
     // Method implementations for inserting into each table
-
     private static void insertMemberRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.print(
-                "Enter member ID, first name, last name, phone number, membership level ID, total spent (comma-separated and no spaces): ");
+                "Enter member ID, first name, last name, phone number (comma-separated and no spaces): ");
         String input = scanner.nextLine();
         String[] params = input.split(",");
         String statementString = "(";
+        //Building the statement string
         for (int i = 0; i < params.length; i++) {
         	if (i == params.length-1) {
-        		statementString += params[i] + ")";
+        		statementString += params[i] + "";
         	}
         	else if (i < 1 || i > 3) {
         		statementString += params[i] + ",";
@@ -101,8 +117,70 @@ public class FitnessCenterApp {
         	else {
         		statementString += "'" + params[i] + "',";
         	}
+        	
         }
-        executeInsert("INSERT INTO colegperry.member VALUES " + statementString);
+        //Gathering the packages the user can select and adding them to the list along with IDs
+        String packagesQuery = "SELECT packagenum,packagename FROM colegperry.coursePackage";
+        HashMap<String, Integer> packageInfo = new HashMap<>();
+        try (Connection conn = DBConnection.getConnection();
+        		//Executing query and reading results
+                Statement stmt = conn.createStatement()) {	
+        		ResultSet answer =stmt.executeQuery(packagesQuery);
+        		
+        		System.out.println("Here is our available packages, which one would you like?\n");
+        		
+        		while (answer.next()) {
+        			packageInfo.put(answer.getString("packagename"), answer.getInt("packagenum"));
+        			System.out.println("Package: " + answer.getString("packagename"));
+        		}
+        		
+        		System.out.print("\nPlease enter a package name: ");
+        		String packageName = scanner.nextLine(); 
+        		
+        		//Adding the package ID to the user record
+        		statementString += "," + packageInfo.get(packageName) + ",NULL,"; 
+        		answer = stmt.executeQuery("SELECT packagecost FROM colegperry.coursePackage WHERE packagenum=" + packageInfo.get(packageName));
+        		BigDecimal packageCost = null;
+        	    if (answer.next()) {
+        	    	System.out.println("\n");
+        	        packageCost = answer.getBigDecimal("packagecost");
+        	        statementString += packageCost + ")";
+        	        // Use package cost as needed
+        	    }
+        	    //Executing the insert
+        	    executeInsert("INSERT INTO colegperry.member VALUES " + statementString);
+        	    
+        	    //Finding which member level the member belongs to based on their purchase and updating
+        	    
+        	    //If a member(s) is found containing the minSpent value higher than the package cost value
+        	    int theID = 0;
+        	    BigDecimal maxAmount = null;
+        	    while (answer.next()) {
+        	    	int curID = answer.getInt("levelID");
+        	    	BigDecimal curAmount = answer.getBigDecimal("minspent");
+        	    	if (maxAmount == null || maxAmount.compareTo(curAmount) < 0 ) {
+        	    		maxAmount = answer.getBigDecimal("minspent");
+        	    		theID = curID;
+        	    	}
+        	    }
+        	    //Executing the update
+                String updateQuery = "UPDATE colegperry.member SET memlevelID = "+ theID + " WHERE memberID =" + params[0];
+                
+                PreparedStatement pstmt = conn.prepareStatement(updateQuery);
+                pstmt.executeUpdate();
+                
+                
+                
+                
+
+        	    //Closing connection to DB
+        	    conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        
+        
     }
 
     private static void insertMemLevelRecord() {
@@ -189,6 +267,7 @@ public class FitnessCenterApp {
 
             int rowsAffected = stmt.executeUpdate();
             System.out.println(rowsAffected + " row(s) inserted.");
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
