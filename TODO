@@ -3,6 +3,10 @@ continue to test:
 -deletion
 
 todo:
+-COLE/HAYDEN: find a way to insert a random number as the ID to a transaction in the insertoperations.java file. as it stands,
+the current implementation takes a variable value (150) and increments it every time a member is added (and a transaction is made),
+but when the program reruns, it resets the variable, which will try to insert with the original value which is now occupied in the
+transaction table which violates the primary key constraint
 -HAYDEN: implementing last two delete functions, then moving on to update functions
 -update insertion/deletion functions and make sure they correspond to tables since we've updated tables a few times (ex. inserting class, we added fields to class table)
 -figure out what to do with the NULL course record in a package that results when a course is deleted using the functions
