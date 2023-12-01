@@ -4,6 +4,7 @@ continue to test:
 
 todo:
 -HAYDEN: implementing last two delete functions, then moving on to update functions
+-update insertion/deletion functions and make sure they correspond to tables since we've updated tables a few times (ex. inserting class, we added fields to class table)
 
 -COLE/AUDREY: start creating queries, create design.pdf (Hayden will provide (b)iv. once complete)
 
