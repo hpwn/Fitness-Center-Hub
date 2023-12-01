@@ -2,7 +2,8 @@ CREATE TABLE member (
 	memberID INT PRIMARY KEY, -- member ID
 	fname VARCHAR2(100),     -- first name
 	lname VARCHAR2(100),     -- last name
-	phonenum VARCHAR2(15),             -- phone number
+	phonenum VARCHAR2(15),   -- phone number
+	curpackageID INT,        --current package the have
 	memlevelID INT,   -- the membership level they bought
 	totalspent NUMBER(*,2) -- total amount a member has spent
 );
