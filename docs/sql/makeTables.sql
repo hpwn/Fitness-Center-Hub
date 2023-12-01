@@ -44,10 +44,10 @@ CREATE TABLE item (
 );
 
 CREATE TABLE transaction (
-	transID INT PRIMARY KEY,  -- the id of the transaction
-	amount INT,              --total amount spent in transaction
-	transdate DATE,          -- date of the transaction
-	transtype VARCHAR2(100)   -- the type of transaction
+        transID INT PRIMARY KEY,  -- the id of the transaction
+        amount NUMBER(*,2),              --total amount spent in transaction
+        transdate DATE,          -- date of the transaction
+        transtype VARCHAR2(100)   -- the type of transaction
 );
 
 CREATE TABLE coursePackage (
