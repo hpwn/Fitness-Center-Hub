@@ -1,4 +1,3 @@
-
 -VERIFIED INSERTIONS WORK CORRECTLY
 
 todo:
@@ -6,16 +5,11 @@ todo:
 creating a new member entry. After this initial step, the system presents the contents and price of each
 available course package for selection. Once a member selects a package, related records are updated to
 reflect this choice.
-    -DONE: So when we insert a member, we have to ask them for the package they want, and update other tables accordingly
-      * DONE: This will require not directly inserting data into the member table, but rather gathering multiple pieces of data
-        such as personal information and then package information, and THEN inserting into the member table and associated tables.
+-DONE: So when we insert a member, we have to ask them for the package they want, and update other tables accordingly \* DONE: This will require not directly inserting data into the member table, but rather gathering multiple pieces of data
+such as personal information and then package information, and THEN inserting into the member table and associated tables.
+-HAYDEN: implementing basic deletion, then putting insertion functions in own file
 
 -COLE/AUDREY: create design.pdf (Hayden will provide (b)iv. once complete)
-
--create initial data with sql or just use jdbc system?
---curate initial data
---insert initial data
---finish implementing insertion function then do it from there?
 
 -either way implement search function -> test asap
 
