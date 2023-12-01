@@ -82,7 +82,7 @@ public class FitnessCenterApp {
             }
 
             // Check for Active Course Participation and Delete
-            deleteCourseParticipations(conn, memberID);
+            //deleteCourseParticipations(conn, memberID);
 
             // Finally, Delete Member
             String deleteQuery = "DELETE FROM colegperry.member WHERE memberID = " + memberID;
@@ -129,7 +129,7 @@ public class FitnessCenterApp {
 
     private static boolean hasUnpaidBalances(Connection conn, String memberID) throws SQLException {
         // Assuming there is a way to determine unpaid transactions.
-        String query = "SELECT COUNT(*) FROM transaction WHERE memberID = ? AND /* condition for unpaid balances */";
+        String query = "SELECT COUNT(*) FROM transaction,member WHERE memberID = ? AND totalspent-totalpaid > 0";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, memberID);
             ResultSet rs = stmt.executeQuery();
