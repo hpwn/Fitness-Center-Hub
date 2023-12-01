@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class InsertOperations {
 
     private static Scanner scanner = new Scanner(System.in);
-    static int transactionID = 150;
+    static int transactionID = 1000;
 
     public static void insertRecord() {
         // Checks what kind of insert the user would like to make
@@ -101,7 +101,7 @@ public class InsertOperations {
             if (answer.next()) {
                 System.out.println("\n");
                 packageCost = answer.getBigDecimal("packagecost");
-                statementString += packageCost + ")";
+                statementString += packageCost + ",0)";
                 // Use package cost as needed
             }
             // Executing the insert
