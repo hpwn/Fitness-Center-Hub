@@ -23,7 +23,9 @@ CREATE TABLE course (
 	courseName VARCHAR(100), -- name of class
 	time INT,                -- the start time
 	sdate DATE,              -- the start date
-	edate DATE        	 -- the end date
+	edate DATE,        	 -- the end date
+	numenrolled INT,
+	maxamount INT
 );
 
 CREATE TABLE trainer (
