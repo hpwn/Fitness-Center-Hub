@@ -52,6 +52,7 @@ CREATE TABLE transaction (
 CREATE TABLE coursePackage (
         packagenum INT PRIMARY KEY, -- the ID of the package
         packagename VARCHAR2(100),  -- the name of the package
+	packagecost NUMBER(*,2),    -- cost of a package
         firstclassID INT,           --the ID of the first class in the package
         secondclassID INT	    -- the ID of the second class in the package
 );
