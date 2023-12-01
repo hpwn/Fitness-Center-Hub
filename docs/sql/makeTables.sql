@@ -5,8 +5,11 @@ CREATE TABLE member (
 	phonenum VARCHAR2(15),   -- phone number
 	curpackageID INT,        --current package the have
 	memlevelID INT,   -- the membership level they bought
-	totalspent NUMBER(*,2) -- total amount a member has spent
+	totalspent NUMBER(*,2), -- total amount a member has spent
+	totalPaid NUMBER(*,2)  -- total amount a member has paid off
+	-- totalspent-totalpaid is the amound they owe, none if 0
 );
+
 
 CREATE TABLE memlevel (
 	levelID INT PRIMARY KEY, -- The ID of the membership level
