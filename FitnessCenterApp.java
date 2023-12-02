@@ -24,7 +24,7 @@ public class FitnessCenterApp {
                         DeleteOperations.deleteRecord();
                         break;
                     case 3:
-                        // updateRecord();
+                        UpdateOperations.updateCoursePackage();
                         break;
                     case 4:
                         // executeQuery();
