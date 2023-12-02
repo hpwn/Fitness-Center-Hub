@@ -161,7 +161,7 @@ public class InsertOperations {
         String input = scanner.nextLine();
         String[] params = input.split(",");
         String statementString = "(" + params[0] + ",'" + params[1] + "'," + params[2] + ",TO_DATE('" + params[3] +
-                "','YYYY-MM-DD'),TO_DATE('" + params[4] + "','YYYY-MM-DD'))";
+                "','YYYY-MM-DD'),TO_DATE('" + params[4] + "','YYYY-MM-DD'),0,50)";
 
         executeInsert(
                 "INSERT INTO colegperry.course VALUES " + statementString);
@@ -225,10 +225,10 @@ public class InsertOperations {
 
     public static void insertCoursePackageRecord() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter Package Number, Package Name, First Class ID, Second Class ID (comma-separated): ");
+        System.out.println("Enter Package Number, Package Name, Cost (To second decimal), First Class ID, Second Class ID (comma-separated): ");
         String input = scanner.nextLine();
         String[] params = input.split(",");
-        String statementString = "(" + params[0] + ",'" + params[1] + "'," + params[2] + "," + params[3] + ")";
+        String statementString = "(" + params[0] + ",'" + params[1] + "'," + params[2] + "," + params[3] + "," +  params[4] + ")";
 
         executeInsert("INSERT INTO colegperry.coursePackage VALUES " + statementString);
     }

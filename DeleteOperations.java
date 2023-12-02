@@ -142,17 +142,17 @@ public class DeleteOperations {
 
     private static void deleteCourse(Connection conn, int courseId) throws SQLException {
         // Update coursePackage table to remove references to the deleted course
-        String sqlUpdatePackage = "UPDATE coursePackage SET firstclassID = NULL WHERE firstclassID = ?; UPDATE coursePackage SET secondclassID = NULL WHERE secondclassID = ?";
+        String sqlUpdatePackage = "UPDATE coursePackage SET firstclassID = NULL WHERE firstclassID = " + courseId;
         try (PreparedStatement stmt = conn.prepareStatement(sqlUpdatePackage)) {
-            stmt.setInt(1, courseId);
-            stmt.setInt(2, courseId);
             stmt.executeUpdate();
+            sqlUpdatePackage = "UPDATE coursePackage SET secondclassID = NULL WHERE secondclassID = " + courseId;
+            PreparedStatement stm = conn.prepareStatement(sqlUpdatePackage);
+            stm.executeUpdate();
         }
 
         // Delete the course
-        String sqlDeleteCourse = "DELETE FROM course WHERE courseID = ?";
+        String sqlDeleteCourse = "DELETE FROM course WHERE courseID = " + courseId;
         try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteCourse)) {
-            stmt.setInt(1, courseId);
             stmt.executeUpdate();
         }
     }
@@ -184,7 +184,7 @@ public class DeleteOperations {
     }
 
     private static void displayCoursePackages(Connection conn) throws SQLException {
-        String sql = "SELECT * FROM coursePackage";
+        String sql = "SELECT * FROM colegperry.coursePackage";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -196,18 +196,16 @@ public class DeleteOperations {
     }
 
     private static boolean isPackageInUse(Connection conn, int packageId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM member WHERE curpackageID = ?";
+        String sql = "SELECT COUNT(*) FROM member WHERE curpackageID = " + packageId;
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, packageId);
             ResultSet rs = stmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         }
     }
 
     private static void deleteCoursePackage(Connection conn, int packageId) throws SQLException {
-        String sql = "DELETE FROM coursePackage WHERE packagenum = ?";
+        String sql = "DELETE FROM colegperry.coursePackage WHERE packagenum = " + packageId;
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, packageId);
             stmt.executeUpdate();
         }
     }
