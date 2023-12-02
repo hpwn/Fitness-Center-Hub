@@ -4,8 +4,43 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+/*
+    Class: Update
+    Authors: Hayden Price, Cole Perry, Audrey Gagum
+    External Packages: java.sql.*, java.util.Scanner
+    Inheritance: None
+
+    Purpose:
+    The Update class is dedicated to updating records in the coursePackage table of a fitness center's 
+    database. It provides functionality to modify existing course packages, including adding new courses, 
+    updating existing courses, or removing courses from a package.
+
+    Public Class Constants and Variables: None
+
+    Constructors:
+    - None
+
+    Implemented Methods:
+    - updateCoursePackage(): Provides an interface to select a course package and choose an update option.
+    - Private utility methods to display course packages and perform specific update operations.
+*/
 public class Update {
 
+    /*
+     * Method: updateCoursePackage
+     * Purpose: Provides a user interface to select a course package and then choose
+     * to either update an existing
+     * course in the package, add a new course to it, or remove a course from it.
+     * Pre-conditions: None
+     * Post-conditions: The selected course package is updated as per the user's
+     * choice.
+     * Return value: None
+     * Parameters: None
+     * 
+     * Exception Handling:
+     * - Catches SQLException to handle any SQL-related errors during the update
+     * operations.
+     */
     public static void updateCoursePackage() {
         try (Connection conn = DBConnection.getConnection()) {
             Scanner scanner = new Scanner(System.in);
@@ -42,6 +77,18 @@ public class Update {
         }
     }
 
+    /*
+     * Method: displayCoursePackages
+     * Purpose: Displays all available course packages from the database.
+     * Pre-conditions: None
+     * Post-conditions: Course package details are printed to the console.
+     * Return value: None
+     * Parameters:
+     * - conn: Connection (in) - The database connection.
+     * 
+     * Exception Handling:
+     * - Throws SQLException for any SQL-related errors encountered.
+     */
     private static void displayCoursePackages(Connection conn) throws SQLException {
         String sql = "SELECT * FROM coursePackage";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -54,6 +101,21 @@ public class Update {
         }
     }
 
+    /*
+     * Method: updateExistingCourseInPackage
+     * Purpose: Updates an existing course in a selected package with a new course
+     * ID.
+     * Pre-conditions: Valid package and course IDs must be provided.
+     * Post-conditions: The course in the package is updated with the new course ID.
+     * Return value: None
+     * Parameters:
+     * - conn: Connection (in) - The database connection.
+     * - packageId: int (in) - The ID of the course package to update.
+     * - scanner: Scanner (in) - Scanner object for reading user input.
+     * 
+     * Exception Handling:
+     * - Throws SQLException for any SQL-related errors encountered.
+     */
     private static void updateExistingCourseInPackage(Connection conn, int packageId, Scanner scanner)
             throws SQLException {
         System.out.println("Enter the ID of the course to update:");
@@ -74,6 +136,22 @@ public class Update {
         }
     }
 
+    /*
+     * Method: addNewCourseToPackage
+     * Purpose: Adds a new course to a selected package, assuming the package can
+     * have two courses.
+     * Pre-conditions: Valid package ID and new course ID must be provided.
+     * Post-conditions: The new course is added to the package if there's an
+     * available slot.
+     * Return value: None
+     * Parameters:
+     * - conn: Connection (in) - The database connection.
+     * - packageId: int (in) - The ID of the course package to update.
+     * - scanner: Scanner (in) - Scanner object for reading user input.
+     * 
+     * Exception Handling:
+     * - Throws SQLException for any SQL-related errors encountered.
+     */
     private static void addNewCourseToPackage(Connection conn, int packageId, Scanner scanner) throws SQLException {
         System.out.println("Enter the ID of the new course to add:");
         int newCourseId = scanner.nextInt();
@@ -93,6 +171,20 @@ public class Update {
         }
     }
 
+    /*
+     * Method: removeCourseFromPackage
+     * Purpose: Removes a specified course from a selected package.
+     * Pre-conditions: Valid package ID and course ID must be provided.
+     * Post-conditions: The specified course is removed from the package.
+     * Return value: None
+     * Parameters:
+     * - conn: Connection (in) - The database connection.
+     * - packageId: int (in) - The ID of the course package to update.
+     * - scanner: Scanner (in) - Scanner object for reading user input.
+     * 
+     * Exception Handling:
+     * - Throws SQLException for any SQL-related errors encountered.
+     */
     private static void removeCourseFromPackage(Connection conn, int packageId, Scanner scanner) throws SQLException {
         System.out.println("Enter the ID of the course to remove:");
         int courseId = scanner.nextInt();
