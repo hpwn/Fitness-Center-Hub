@@ -7,7 +7,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class InsertOperations {
+public class Insert {
 
     private static Scanner scanner = new Scanner(System.in);
     static int transactionID = 1000;
@@ -225,15 +225,17 @@ public class InsertOperations {
 
     public static void insertCoursePackageRecord() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter Package Number, Package Name, Cost (To second decimal), First Class ID, Second Class ID (comma-separated): ");
+        System.out.println(
+                "Enter Package Number, Package Name, Cost (To second decimal), First Class ID, Second Class ID (comma-separated): ");
         String input = scanner.nextLine();
         String[] params = input.split(",");
-        String statementString = "(" + params[0] + ",'" + params[1] + "'," + params[2] + "," + params[3] + "," +  params[4] + ")";
+        String statementString = "(" + params[0] + ",'" + params[1] + "'," + params[2] + "," + params[3] + ","
+                + params[4] + ")";
 
         executeInsert("INSERT INTO colegperry.coursePackage VALUES " + statementString);
     }
 
-    public  static void executeInsert(String sql) {
+    public static void executeInsert(String sql) {
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
 

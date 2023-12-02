@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class DeleteOperations {
+public class Delete {
     public static void deleteRecord() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Select a table to delete record from:");

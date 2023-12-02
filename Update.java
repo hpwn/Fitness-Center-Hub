@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class UpdateOperations {
+public class Update {
 
     public static void updateCoursePackage() {
         try (Connection conn = DBConnection.getConnection()) {

@@ -1,4 +1,3 @@
-import java.sql.*;
 import java.util.Scanner;
 
 public class FitnessCenterApp {
@@ -18,16 +17,16 @@ public class FitnessCenterApp {
 
                 switch (choice) {
                     case 1:
-                        InsertOperations.insertRecord();
+                        Insert.insertRecord();
                         break;
                     case 2:
-                        DeleteOperations.deleteRecord();
+                        Delete.deleteRecord();
                         break;
                     case 3:
-                        UpdateOperations.updateCoursePackage();
+                        Update.updateCoursePackage();
                         break;
                     case 4:
-                        // executeQuery();
+                        Query.executeQueries();
                         break;
                     case 5:
                         return;
