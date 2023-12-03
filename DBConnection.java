@@ -27,7 +27,7 @@ import java.sql.*;
     - getConnection() method throws SQLException to indicate a failure in establishing a database connection.
 */
 public class DBConnection {
-    private static final String URL = "jdbc:oracle:thin:@aloe.cs.arizona.edu:1521:orcl";
+    private static final String URL = "jdbc:oracle:thin:@aloe.cs.arizona.edu:1521:oracle";
     private static final String USER = "colegperry";
     private static final String PASSWORD = "a7601";
 
