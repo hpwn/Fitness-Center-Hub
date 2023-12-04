@@ -72,6 +72,7 @@ public class Query {
                         executeCustomQuery(conn, scanner);
                         break;
                     case 5:
+                    	conn.close();
                         System.out.println("Exiting query interface...");
                         return;
                     default:
@@ -127,7 +128,11 @@ public class Query {
         System.out.println("Enter Member ID:");
         int memberId = scanner.nextInt();
 
-        String sql = "SELECT c.courseName, c.sdate, c.edate FROM course c JOIN coursePackage cp ON c.courseID = cp.firstclassID OR c.courseID = cp.secondclassID WHERE cp.packagenum IN (SELECT curpackageID FROM member WHERE memberID = ?) AND MONTH(c.sdate) = 11 AND YEAR(c.sdate) = YEAR(CURRENT_DATE)";
+        String sql = "SELECT c.courseName, c.sdate, c.edate " +
+                "FROM colegperry.course c " +
+                "JOIN colegperry.coursePackage cp ON c.courseID = cp.firstclassID OR c.courseID = cp.secondclassID " +
+                "WHERE cp.packagenum IN (SELECT curpackageID FROM member WHERE memberID = ?) " +
+                "AND TO_CHAR(c.sdate, 'YYMM') = '2311'";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memberId);
             ResultSet rs = stmt.executeQuery();
@@ -155,7 +160,7 @@ public class Query {
      * - Throws SQLException for any SQL-related errors encountered.
      */
     private static void checkTrainersWorkingHoursForDecember(Connection conn) throws SQLException {
-        String sql = "SELECT t.trainername, COUNT(*) as totalClasses FROM trainer t JOIN trainClass tc ON t.trainerID = tc.trainerID JOIN course c ON tc.classID = c.courseID WHERE MONTH(c.sdate) = 12 AND YEAR(c.sdate) = YEAR(CURRENT_DATE) GROUP BY t.trainername";
+        String sql = "SELECT t.trainername, COUNT(*) as totalClasses FROM colegperry.trainer t JOIN colegperry.trainClass tc ON t.trainerID = tc.trainerID JOIN colegperry.course c ON tc.classID = c.courseID WHERE EXTRACT(MONTH FROM c.sdate) = 12 AND EXTRACT(YEAR FROM c.sdate) = EXTRACT(YEAR FROM CURRENT_DATE) GROUP BY t.trainername";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
