@@ -26,6 +26,88 @@ import java.util.Scanner;
 */
 public class Update {
 
+	
+	
+	
+	
+	
+    /*
+     * Method: updateRecord
+     * Purpose: Displays a menu for the user to select the type of record they wish
+     * to update in the database.
+     * The method then calls the appropriate method based on the user's choice.
+     * Pre-conditions: None
+     * Post-conditions: The selected record is updated in the database, or an
+     * invalid choice message is displayed.
+     * Return value: None
+     * Parameters: None
+     * 
+     * Exception Handling:
+     * - None within this method, but methods called from it may handle exceptions,
+     * particularly SQL exceptions.
+     */
+    public static void updateRecord() {
+        // Checks what kind of insert the user would like to make
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Select a table to insert record:");
+        System.out.println("1: Update Course Package");
+        System.out.println("2: Add funds to user account");
+
+        int tableChoice = scanner.nextInt();
+
+        switch (tableChoice) {
+            case 1:
+                updateCoursePackage();
+                break;
+            case 2:
+                addFundsToMember();
+                break;
+
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+    
+    /*
+     * Method: addFundsToMember
+     * Purpose: Asks the user for an amount, which is the amount the member
+     * is going to 'pay off' for their account. This amount is added to the
+     * user's "amountpaid" attribute.
+     * Pre-conditions: None
+     * Post-conditions: The selected record is updated in the database, or an
+     * invalid choice message is displayed.
+     * Return value: None
+     * Parameters: None
+     * 
+     * Exception Handling:
+     * - None within this method, but methods called from it may handle exceptions,
+     * particularly SQL exceptions.
+     */
+    public static void addFundsToMember() {
+        try (Connection conn = DBConnection.getConnection()) {
+            Scanner scanner = new Scanner(System.in);
+
+
+            // Ask the admin to select a package for editing
+            System.out.print("Enter the ID of the Member account to add funds to:");
+            int userID = scanner.nextInt();
+            
+            System.out.println("Enter the amount of money (floating point value):");
+            float amount = scanner.nextFloat();
+            String sql = "UPDATE colegperry.member SET totalpaid = " + amount + "WHERE memberID = " + userID;
+            
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.executeUpdate();
+            
+            
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+//    UPDATE table_name
+//    SET column_name = new_value
+//    WHERE condition;
     /*
      * Method: updateCoursePackage
      * Purpose: Provides a user interface to select a course package and then choose
@@ -72,6 +154,7 @@ public class Update {
                 default:
                     System.out.println("Invalid choice.");
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
