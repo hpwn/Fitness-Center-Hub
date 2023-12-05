@@ -86,7 +86,7 @@ public class FitnessCenterApp {
                         Delete.deleteRecord();
                         break;
                     case 3:
-                        Update.updateCoursePackage();
+                        Update.updateRecord();
                         break;
                     case 4:
                         Query.executeQueries();
