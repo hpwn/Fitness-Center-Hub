@@ -102,7 +102,7 @@ public class Delete {
 
             // Delete the member record
             deleteMember(conn, memberId);
-
+            conn.close();
             System.out.println("Member record deleted successfully.");
 
         } catch (SQLException e) {
@@ -147,12 +147,13 @@ public class Delete {
      * - Throws SQLException for any SQL-related errors encountered.
      */
     private static boolean hasUnpaidBalances(Connection conn, int memberId) throws SQLException {
-        String sql = "SELECT SUM(totalPaid - totalspent) AS balance FROM member WHERE memberID = ?";
+        String sql = "SELECT SUM(totalPaid - totalspent) AS balance FROM colegperry.member WHERE memberID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memberId);
             ResultSet rs = stmt.executeQuery();
             if (rs.next() && rs.getDouble("balance") < 0) {
                 System.out.println("Member has unpaid balances. Cannot delete.");
+                conn.close();
                 return true;
             }
         }
@@ -175,7 +176,7 @@ public class Delete {
      * - Throws SQLException for any SQL-related errors encountered.
      */
     private static void handleActiveCourseParticipation(Connection conn, int memberId) throws SQLException {
-        String sql = "DELETE FROM course WHERE memberID = ?";
+        String sql = "DELETE FROM colegperry.member WHERE memberID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memberId);
             stmt.executeUpdate();
@@ -197,7 +198,7 @@ public class Delete {
      * - Throws SQLException for any SQL-related errors encountered.
      */
     private static void deleteMember(Connection conn, int memberId) throws SQLException {
-        String sql = "DELETE FROM member WHERE memberID = ?";
+        String sql = "DELETE FROM colegperry.member WHERE memberID = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, memberId);
             stmt.executeUpdate();
@@ -231,11 +232,13 @@ public class Delete {
                 System.out.println("Press 'Y' to confirm deletion after notifying members:");
                 String confirmation = scanner.next();
                 if (!confirmation.equalsIgnoreCase("Y")) {
+                	conn.close();
                     return; // Exit if not confirmed
                 }
             }
 
             deleteCourse(conn, courseId);
+            conn.close();
             System.out.println("Course and corresponding enrollments deleted successfully.");
 
         } catch (SQLException e) {
@@ -326,6 +329,7 @@ public class Delete {
         try (PreparedStatement stmt = conn.prepareStatement(sqlDeleteCourse)) {
             stmt.executeUpdate();
         }
+        conn.close();
     }
 
     /*
@@ -362,7 +366,7 @@ public class Delete {
             // Proceed with deletion
             deleteCoursePackage(conn, packageId);
             System.out.println("Course package deleted successfully.");
-
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
